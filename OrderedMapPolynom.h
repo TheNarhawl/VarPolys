@@ -17,6 +17,7 @@ public:
 
     OrderedMapPolynom operator+(const OrderedMapPolynom& other) const;
     OrderedMapPolynom operator-(const OrderedMapPolynom& other) const;
+    OrderedMapPolynom operator*(const OrderedMapPolynom& other) const;
 
     void print() const;
 };

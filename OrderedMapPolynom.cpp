@@ -44,3 +44,22 @@ OrderedMapPolynom OrderedMapPolynom::operator-(const OrderedMapPolynom& other) c
     }
     return result;
 }
+
+OrderedMapPolynom OrderedMapPolynom::operator*(const OrderedMapPolynom& other) const {
+    OrderedMapPolynom result;
+
+    for (const auto& [vars1, coef1] : this->terms) {
+        for (const auto& [vars2, coef2] : other.terms) {
+            VariableKey newVars = vars1;
+
+            for (const auto& [var, exp] : vars2) {
+                newVars[var] += exp;
+            }
+
+            result.addTerm(coef1 * coef2, newVars);
+        }
+    }
+
+    return result;
+}
+

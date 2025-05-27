@@ -1,11 +1,12 @@
 #pragma once
-#include <string>
-#include <iostream>
 #include <map>
+#include <iostream>
+#include <string>
+#include <sstream>
 
 struct Monomial {
-    double coefficient;
     std::map<char, int> variables;
+    double coefficient;
 
     bool operator<(const Monomial& other) const;
     bool operator==(const Monomial& other) const;
@@ -22,16 +23,19 @@ struct Node {
 };
 
 class AVLTreePolynom {
-private:
     Node* root;
 
-    Node* insert(Node* node, const Monomial& m);
-    Node* rotateLeft(Node* y);
-    Node* rotateRight(Node* x);
+    void destroy(Node* node);
     int height(Node* n);
     int getBalance(Node* n);
+    Node* rotateRight(Node* y);
+    Node* rotateLeft(Node* x);
+    Node* insert(Node* node, const Monomial& m);
     void inorder(Node* node) const;
-    void destroy(Node* node);
+
+    void traverseAndInsert(Node* node, AVLTreePolynom& target, double sign) const;
+    void multiplyWith(Node* a, const AVLTreePolynom& other, AVLTreePolynom& result) const;
+    void multiplyByMonomial(Node* b, const Monomial& m, AVLTreePolynom& result) const;
 
 public:
     AVLTreePolynom();
@@ -39,4 +43,8 @@ public:
 
     void insert(const Monomial& m);
     void print() const;
+
+    AVLTreePolynom operator+(const AVLTreePolynom& other) const;
+    AVLTreePolynom operator-(const AVLTreePolynom& other) const;
+    AVLTreePolynom operator*(const AVLTreePolynom& other) const;
 };
