@@ -26,7 +26,32 @@ std::string OrderedMapPolynom::toString() const {
 }
 
 void OrderedMapPolynom::print() const {
-    std::cout << toString() << std::endl;
+    if (terms.empty()) {
+        std::cout << "0";
+        return;
+    }
+
+    bool isFirstTerm = true;
+    for (const auto& [vars, coef] : terms) {
+        if (!isFirstTerm) {
+            std::cout << (coef >= 0 ? " + " : " - ");
+        }
+        else if (coef < 0) {
+            std::cout << "-";
+        }
+        isFirstTerm = false;
+
+        double absCoef = std::abs(coef);
+        if (absCoef != 1.0 || vars.empty()) {
+            std::cout << absCoef;
+        }
+
+        for (const auto& [var, exp] : vars) {
+            std::cout << var;
+            if (exp != 1) std::cout << "^" << exp;
+        }
+    }
+    std::cout << std::endl;
 }
 
 OrderedMapPolynom OrderedMapPolynom::operator+(const OrderedMapPolynom& other) const {

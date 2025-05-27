@@ -79,20 +79,42 @@ CollisionResolutionPolynom CollisionResolutionPolynom::operator*(const Collision
 }
 
 void CollisionResolutionPolynom::print() const {
-    std::ostringstream oss;
-    bool first = true;
+    bool isFirstTerm = true;
+    bool hasTerms = false;
+
     for (const auto& optNode : table) {
         if (!optNode.has_value()) continue;
 
         const auto& node = optNode.value();
-        if (!first && node.coefficient >= 0) oss << "+";
-        oss << node.coefficient;
-        for (const auto& [var, exp] : node.variables) {
-            oss << var;
-            if (exp != 1) oss << "^" << exp;
+        if (node.coefficient == 0) continue;
+
+        hasTerms = true;
+
+        if (!isFirstTerm) {
+            std::cout << (node.coefficient >= 0 ? " + " : " - ");
         }
-        oss << " ";
-        first = false;
+        else {
+            if (node.coefficient < 0) std::cout << "-";
+        }
+
+        double absCoeff = std::abs(node.coefficient);
+
+        if (absCoeff != 1.0 || node.variables.empty()) {
+            std::cout << absCoeff;
+        }
+
+        for (const auto& [var, exp] : node.variables) {
+            std::cout << var;
+            if (exp != 1) std::cout << "^" << exp;
+        }
+
+        isFirstTerm = false;
     }
-    std::cout << (first ? "0" : oss.str()) << std::endl;
+
+    if (!hasTerms) {
+        std::cout << "0";
+    }
+
+    std::cout << std::endl;
 }
+

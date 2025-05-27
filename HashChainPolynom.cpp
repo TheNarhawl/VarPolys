@@ -72,19 +72,41 @@ HashChainPolynom HashChainPolynom::operator*(const HashChainPolynom& other) cons
 }
 
 void HashChainPolynom::print() const {
-    std::ostringstream oss;
-    bool first = true;
+    bool isFirstTerm = true;
+    bool hasTerms = false;
+
     for (const auto& bucket : table) {
         for (const auto& node : bucket) {
-            if (!first && node.coefficient >= 0) oss << "+";
-            oss << node.coefficient;
-            for (const auto& [var, exp] : node.variables) {
-                oss << var;
-                if (exp != 1) oss << "^" << exp;
+            if (node.coefficient == 0) continue;
+
+            hasTerms = true;
+
+            if (!isFirstTerm) {
+                std::cout << (node.coefficient >= 0 ? " + " : " - ");
             }
-            oss << " ";
-            first = false;
+            else {
+                if (node.coefficient < 0) std::cout << "-";
+            }
+
+            double absCoeff = std::abs(node.coefficient);
+
+            if (absCoeff != 1.0 || node.variables.empty()) {
+                std::cout << absCoeff;
+            }
+
+            for (const auto& [var, exp] : node.variables) {
+                std::cout << var;
+                if (exp != 1) std::cout << "^" << exp;
+            }
+
+            isFirstTerm = false;
         }
     }
-    std::cout << (first ? "0" : oss.str()) << std::endl;
+
+    if (!hasTerms) {
+        std::cout << "0";
+    }
+
+    std::cout << std::endl;
 }
+

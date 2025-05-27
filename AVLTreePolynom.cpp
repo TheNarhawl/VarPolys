@@ -97,9 +97,44 @@ void AVLTreePolynom::inorder(Node* node) const {
 }
 
 void AVLTreePolynom::print() const {
-    inorder(root);
+    bool isFirstTerm = true;
+    printInOrder(root, isFirstTerm);
+    if (isFirstTerm) {
+        std::cout << "0";
+    }
     std::cout << std::endl;
 }
+
+void AVLTreePolynom::printInOrder(Node* node, bool& isFirstTerm) const {
+    if (!node) return;
+
+    printInOrder(node->left, isFirstTerm);
+
+    const Monomial& m = node->monom;
+    if (m.coefficient != 0) {
+        if (!isFirstTerm) {
+            std::cout << (m.coefficient >= 0 ? " + " : " - ");
+        }
+        else {
+            if (m.coefficient < 0) std::cout << "-";
+        }
+
+        double absCoeff = std::abs(m.coefficient);
+        if (absCoeff != 1.0 || m.variables.empty()) {
+            std::cout << absCoeff;
+        }
+
+        for (const auto& [var, exp] : m.variables) {
+            std::cout << var;
+            if (exp != 1) std::cout << "^" << exp;
+        }
+
+        isFirstTerm = false;
+    }
+
+    printInOrder(node->right, isFirstTerm);
+}
+
 
 void AVLTreePolynom::traverseAndInsert(Node* node, AVLTreePolynom& target, double sign) const {
     if (!node) return;

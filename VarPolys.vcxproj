@@ -132,7 +132,8 @@
     <ClCompile Include="CollisionResolutionPolynom.cpp" />
     <ClCompile Include="HashChainPolynom.cpp" />
     <ClCompile Include="OrderedMapPolynom.cpp" />
-    <ClCompile Include="UnorderedArrayListPolynom.cpp" />
+    <ClCompile Include="UnorderedListPolynom.cpp" />
+    <ClCompile Include="UnorderedMapArrayPolynom.cpp" />
     <ClCompile Include="VarPolys.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -140,7 +141,8 @@
     <ClInclude Include="CollisionResolutionPolynom.h" />
     <ClInclude Include="HashChainPolynom.h" />
     <ClInclude Include="OrderedMapPolynom.h" />
-    <ClInclude Include="UnorderedArrayListPolynom.h" />
+    <ClInclude Include="UnorderedListPolynom.h" />
+    <ClInclude Include="UnorderedMapArrayPolynom.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

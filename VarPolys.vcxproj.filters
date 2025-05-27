@@ -30,7 +30,10 @@
     <ClCompile Include="CollisionResolutionPolynom.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="UnorderedArrayListPolynom.cpp">
+    <ClCompile Include="UnorderedListPolynom.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="UnorderedMapArrayPolynom.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,7 +50,10 @@
     <ClInclude Include="CollisionResolutionPolynom.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="UnorderedArrayListPolynom.h">
+    <ClInclude Include="UnorderedListPolynom.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="UnorderedMapArrayPolynom.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

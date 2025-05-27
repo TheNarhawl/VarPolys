@@ -1,9 +1,11 @@
 #pragma once
-#include <vector>
+#include <list>
 #include <map>
 #include <iostream>
+#include <sstream>
+#include <algorithm>
 
-class UnorderedArrayListPolynom {
+class UnorderedListPolynom {
 private:
     struct Term {
         std::map<char, int> variables;
@@ -14,13 +16,14 @@ private:
         }
     };
 
-    std::vector<Term> terms;
+    std::list<Term> terms;
 
 public:
     void addTerm(double coefficient, const std::map<char, int>& variables);
-    UnorderedArrayListPolynom operator+(const UnorderedArrayListPolynom& other) const;
-    UnorderedArrayListPolynom operator-(const UnorderedArrayListPolynom& other) const;
-    UnorderedArrayListPolynom operator*(const UnorderedArrayListPolynom& other) const;
+
+    UnorderedListPolynom operator+(const UnorderedListPolynom& other) const;
+    UnorderedListPolynom operator-(const UnorderedListPolynom& other) const;
+    UnorderedListPolynom operator*(const UnorderedListPolynom& other) const;
 
     void print() const;
 };

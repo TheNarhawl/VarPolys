@@ -43,6 +43,8 @@ public:
 
     void insert(const Monomial& m);
     void print() const;
+    void printInOrder(Node* node, bool& isFirstTerm) const;
+
 
     AVLTreePolynom operator+(const AVLTreePolynom& other) const;
     AVLTreePolynom operator-(const AVLTreePolynom& other) const;
