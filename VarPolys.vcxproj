@@ -129,10 +129,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AVLTreePolynom.cpp" />
+    <ClCompile Include="CollisionResolutionPolynom.cpp" />
+    <ClCompile Include="HashChainPolynom.cpp" />
+    <ClCompile Include="OrderedMapPolynom.cpp" />
+    <ClCompile Include="UnorderedArrayListPolynom.cpp" />
     <ClCompile Include="VarPolys.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AVLTreePolynom.h" />
+    <ClInclude Include="CollisionResolutionPolynom.h" />
+    <ClInclude Include="HashChainPolynom.h" />
+    <ClInclude Include="OrderedMapPolynom.h" />
+    <ClInclude Include="UnorderedArrayListPolynom.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
