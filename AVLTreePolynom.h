@@ -57,4 +57,6 @@ public:
     void print() const;
     void clear();
     size_t getSize() const;
+
+    std::vector<Term> getTerms() const;
 };

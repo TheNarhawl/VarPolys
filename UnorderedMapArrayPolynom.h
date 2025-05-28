@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <algorithm>
+#include <vector>
 
 class UnorderedMapArrayPolynom {
 private:
@@ -27,4 +28,6 @@ public:
 
     void print() const;
     void clear();
+
+    std::vector<std::pair<double, std::map<char, int>>> getTerms() const;
 };

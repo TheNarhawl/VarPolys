@@ -91,3 +91,13 @@ OrderedMapPolynom OrderedMapPolynom::operator*(const OrderedMapPolynom& other) c
 void OrderedMapPolynom::clear() {
     terms.clear();
 }
+
+std::vector<std::pair<double, VariableKey>> OrderedMapPolynom::getTerms() const {
+    std::vector<std::pair<double, VariableKey>> result;
+    for (const auto& [variables, coefficient] : terms) {
+        if (coefficient != 0) {
+            result.emplace_back(coefficient, variables);
+        }
+    }
+    return result;
+}

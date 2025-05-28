@@ -2,6 +2,7 @@
 #include <map>
 #include <string>
 #include <iostream>
+#include <vector>
 
 using VariableKey = std::map<char, int>;
 
@@ -22,4 +23,5 @@ public:
     void print() const;
     void clear();
 
+    std::vector<std::pair<double, VariableKey>> getTerms() const;
 };

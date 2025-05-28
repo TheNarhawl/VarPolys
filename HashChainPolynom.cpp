@@ -116,3 +116,15 @@ void HashChainPolynom::clear() {
     }
 }
 
+std::vector<HashChainPolynom::Node> HashChainPolynom::getTerms() const {
+    std::vector<Node> terms;
+    for (const auto& chain : table) {
+        for (const auto& node : chain) {
+            if (node.coefficient != 0) {
+                terms.push_back(node);
+            }
+        }
+    }
+    return terms;
+}
+

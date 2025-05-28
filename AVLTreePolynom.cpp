@@ -268,3 +268,10 @@ void AVLTreePolynom::clear() {
 size_t AVLTreePolynom::getSize() const {
     return size;
 }
+
+std::vector<AVLTreePolynom::Term> AVLTreePolynom::getTerms() const {
+    std::vector<Term> terms;
+    inOrderTraversal(root, terms);
+    return terms;
+}
+

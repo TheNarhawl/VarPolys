@@ -32,4 +32,6 @@ public:
 
     void print() const;
     void clear();
+
+    std::vector<Node> getTerms() const;
 };

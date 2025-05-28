@@ -124,4 +124,14 @@ void CollisionResolutionPolynom::clear() {
     size = 0;
 }
 
+std::vector<CollisionResolutionPolynom::Node> CollisionResolutionPolynom::getTerms() const {
+    std::vector<Node> terms;
+    for (const auto& optNode : table) {
+        if (optNode.has_value() && optNode->coefficient != 0) {
+            terms.push_back(optNode.value());
+        }
+    }
+    return terms;
+}
+
 

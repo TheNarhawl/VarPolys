@@ -1,6 +1,10 @@
 ﻿#include <iostream>
 #include <chrono>
 #include "MultiPolynomStorage.h"
+#include "json.hpp"
+#include "httplib.h"
+
+using json = nlohmann::json;
 
 int main() {
     setlocale(LC_ALL, "Russian");
@@ -26,6 +30,23 @@ int main() {
     std::cout << "\n=== УМНОЖЕНИЕ ===\n";
     MultiPolynomStorage prod = p1 * p2;
     prod.print();
+
+    std::string polyType = "unorderedList";
+
+    auto terms = p1.getTermsFrom(polyType);
+
+    std::cout << "\nТермы из полинома типа \"" << polyType << "\":\n";
+    for (const auto& [coeff, vars] : terms) {
+        std::cout << coeff;
+        for (const auto& [var, exp] : vars) {
+            std::cout << var;
+            if (exp != 1)
+                std::cout << "^" << exp;
+        }
+        std::cout << "\n";
+    }
+
+    return 0;
 
     return 0;
 }

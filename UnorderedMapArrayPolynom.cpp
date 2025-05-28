@@ -80,3 +80,13 @@ void UnorderedMapArrayPolynom::print() const {
 void UnorderedMapArrayPolynom::clear() {
     terms.clear();
 }
+
+std::vector<std::pair<double, std::map<char, int>>> UnorderedMapArrayPolynom::getTerms() const {
+    std::vector<std::pair<double, std::map<char, int>>> result;
+    for (const auto& term : terms) {
+        if (term.coefficient != 0) {
+            result.emplace_back(term.coefficient, term.variables);
+        }
+    }
+    return result;
+}
