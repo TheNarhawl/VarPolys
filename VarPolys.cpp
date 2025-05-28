@@ -35,7 +35,19 @@ void createPolynomFromJson(MultiPolynomStorage& poly, const json& terms) {
 int main() {
     httplib::Server server;
 
+    server.Options("/process", [](const httplib::Request& req, httplib::Response& res) {
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        res.set_header("Access-Control-Max-Age", "86400");
+        res.status = 204;
+        });
+
     server.Post("/process", [](const httplib::Request& req, httplib::Response& res) {
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
         try {
             json input = json::parse(req.body);
 
