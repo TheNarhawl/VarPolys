@@ -1,189 +1,270 @@
 #include "AVLTreePolynom.h"
+#include <cmath>
+#include <algorithm>
 
-bool Monomial::operator<(const Monomial& other) const {
-    return variables < other.variables;
+AVLTreePolynom::Term::Term(double coeff, const std::map<char, int>& vars)
+    : coefficient(coeff), variables(vars) {
 }
 
-bool Monomial::operator==(const Monomial& other) const {
+bool AVLTreePolynom::Term::operator<(const Term& other) const {
+    int this_degree = 0, other_degree = 0;
+    for (const auto& [var, exp] : variables) this_degree += exp;
+    for (const auto& [var, exp] : other.variables) other_degree += exp;
+
+    if (this_degree != other_degree) return this_degree > other_degree;
+
+    auto it1 = variables.begin(), it2 = other.variables.begin();
+    while (it1 != variables.end() && it2 != other.variables.end()) {
+        if (it1->first != it2->first) return it1->first < it2->first;
+        if (it1->second != it2->second) return it1->second > it2->second;
+        ++it1; ++it2;
+    }
+    return variables.size() > other.variables.size();
+}
+
+bool AVLTreePolynom::Term::operator==(const Term& other) const {
     return variables == other.variables;
 }
 
-std::string Monomial::toString() const {
-    std::ostringstream oss;
-    oss << (coefficient >= 0 ? "+" : "") << coefficient;
-    for (const auto& [var, exp] : variables) {
-        oss << var;
-        if (exp != 1) oss << "^" << exp;
+AVLTreePolynom::AVLNode::AVLNode(const Term& t)
+    : term(t), left(nullptr), right(nullptr), height(1) {
+}
+
+AVLTreePolynom::AVLTreePolynom() : root(nullptr), size(0) {}
+
+AVLTreePolynom::AVLTreePolynom(const AVLTreePolynom& other)
+    : root(copyTree(other.root)), size(other.size) {
+}
+
+AVLTreePolynom::AVLTreePolynom(AVLTreePolynom&& other) noexcept
+    : root(other.root), size(other.size) {
+    other.root = nullptr;
+    other.size = 0;
+}
+
+AVLTreePolynom& AVLTreePolynom::operator=(const AVLTreePolynom& other) {
+    if (this != &other) {
+        clear(root);
+        root = copyTree(other.root);
+        size = other.size;
     }
-    return oss.str();
+    return *this;
 }
 
-Node::Node(const Monomial& m) : monom(m), left(nullptr), right(nullptr), height(1) {}
-
-AVLTreePolynom::AVLTreePolynom() : root(nullptr) {}
-AVLTreePolynom::~AVLTreePolynom() { destroy(root); }
-
-void AVLTreePolynom::destroy(Node* node) {
-    if (node) {
-        destroy(node->left);
-        destroy(node->right);
-        delete node;
+AVLTreePolynom& AVLTreePolynom::operator=(AVLTreePolynom&& other) noexcept {
+    if (this != &other) {
+        clear(root);
+        root = other.root;
+        size = other.size;
+        other.root = nullptr;
+        other.size = 0;
     }
+    return *this;
 }
 
-int AVLTreePolynom::height(Node* n) {
-    return n ? n->height : 0;
+AVLTreePolynom::~AVLTreePolynom() {
+    clear(root);
 }
 
-int AVLTreePolynom::getBalance(Node* n) {
-    return n ? height(n->left) - height(n->right) : 0;
+int AVLTreePolynom::height(AVLNode* node) const {
+    return node ? node->height : 0;
 }
 
-Node* AVLTreePolynom::rotateRight(Node* y) {
-    Node* x = y->left;
-    Node* T2 = x->right;
+int AVLTreePolynom::balanceFactor(AVLNode* node) const {
+    return node ? height(node->left) - height(node->right) : 0;
+}
+
+void AVLTreePolynom::updateHeight(AVLNode* node) {
+    if (node)
+        node->height = 1 + std::max(height(node->left), height(node->right));
+}
+
+AVLTreePolynom::AVLNode* AVLTreePolynom::rotateRight(AVLNode* y) {
+    AVLNode* x = y->left;
+    AVLNode* T2 = x->right;
     x->right = y;
     y->left = T2;
-    y->height = std::max(height(y->left), height(y->right)) + 1;
-    x->height = std::max(height(x->left), height(x->right)) + 1;
+    updateHeight(y);
+    updateHeight(x);
     return x;
 }
 
-Node* AVLTreePolynom::rotateLeft(Node* x) {
-    Node* y = x->right;
-    Node* T2 = y->left;
+AVLTreePolynom::AVLNode* AVLTreePolynom::rotateLeft(AVLNode* x) {
+    AVLNode* y = x->right;
+    AVLNode* T2 = y->left;
     y->left = x;
     x->right = T2;
-    x->height = std::max(height(x->left), height(x->right)) + 1;
-    y->height = std::max(height(y->left), height(y->right)) + 1;
+    updateHeight(x);
+    updateHeight(y);
     return y;
 }
 
-Node* AVLTreePolynom::insert(Node* node, const Monomial& m) {
-    if (!node) return new Node(m);
-    if (m < node->monom) node->left = insert(node->left, m);
-    else if (node->monom < m) node->right = insert(node->right, m);
-    else {
-        node->monom.coefficient += m.coefficient;
-        return node;
-    }
-
-    node->height = std::max(height(node->left), height(node->right)) + 1;
-    int balance = getBalance(node);
-
-    if (balance > 1 && m < node->left->monom) return rotateRight(node);
-    if (balance < -1 && node->right->monom < m) return rotateLeft(node);
-    if (balance > 1 && node->left->monom < m) {
-        node->left = rotateLeft(node->left);
+AVLTreePolynom::AVLNode* AVLTreePolynom::balance(AVLNode* node) {
+    if (!node) return nullptr;
+    updateHeight(node);
+    int bf = balanceFactor(node);
+    if (bf > 1) {
+        if (balanceFactor(node->left) < 0)
+            node->left = rotateLeft(node->left);
         return rotateRight(node);
     }
-    if (balance < -1 && m < node->right->monom) {
-        node->right = rotateRight(node->right);
+    if (bf < -1) {
+        if (balanceFactor(node->right) > 0)
+            node->right = rotateRight(node->right);
         return rotateLeft(node);
     }
     return node;
 }
 
-void AVLTreePolynom::insert(const Monomial& m) {
-    if (m.coefficient != 0.0)
-        root = insert(root, m);
-}
-
-void AVLTreePolynom::inorder(Node* node) const {
-    if (!node) return;
-    inorder(node->left);
-    std::cout << node->monom.toString() << " ";
-    inorder(node->right);
-}
-
-void AVLTreePolynom::print() const {
-    bool isFirstTerm = true;
-    printInOrder(root, isFirstTerm);
-    if (isFirstTerm) {
-        std::cout << "0";
+AVLTreePolynom::AVLNode* AVLTreePolynom::insert(AVLNode* node, const Term& term) {
+    if (!node) {
+        size++;
+        return new AVLNode(term);
     }
-    std::cout << std::endl;
+    if (term == node->term) {
+        node->term.coefficient += term.coefficient;
+        if (node->term.coefficient == 0)
+            return remove(node, term);
+        return node;
+    }
+    if (term < node->term)
+        node->left = insert(node->left, term);
+    else
+        node->right = insert(node->right, term);
+    return balance(node);
 }
 
-void AVLTreePolynom::printInOrder(Node* node, bool& isFirstTerm) const {
-    if (!node) return;
+AVLTreePolynom::AVLNode* AVLTreePolynom::findMin(AVLNode* node) const {
+    while (node && node->left)
+        node = node->left;
+    return node;
+}
 
-    printInOrder(node->left, isFirstTerm);
-
-    const Monomial& m = node->monom;
-    if (m.coefficient != 0) {
-        if (!isFirstTerm) {
-            std::cout << (m.coefficient >= 0 ? " + " : " - ");
+AVLTreePolynom::AVLNode* AVLTreePolynom::remove(AVLNode* node, const Term& term) {
+    if (!node) return nullptr;
+    if (term < node->term)
+        node->left = remove(node->left, term);
+    else if (node->term < term)
+        node->right = remove(node->right, term);
+    else {
+        if (!node->left || !node->right) {
+            AVLNode* temp = node->left ? node->left : node->right;
+            if (!temp) {
+                temp = node;
+                node = nullptr;
+            }
+            else {
+                *node = *temp;
+            }
+            delete temp;
+            size--;
         }
         else {
-            if (m.coefficient < 0) std::cout << "-";
+            AVLNode* temp = findMin(node->right);
+            node->term = temp->term;
+            node->right = remove(node->right, temp->term);
         }
-
-        double absCoeff = std::abs(m.coefficient);
-        if (absCoeff != 1.0 || m.variables.empty()) {
-            std::cout << absCoeff;
-        }
-
-        for (const auto& [var, exp] : m.variables) {
-            std::cout << var;
-            if (exp != 1) std::cout << "^" << exp;
-        }
-
-        isFirstTerm = false;
     }
-
-    printInOrder(node->right, isFirstTerm);
+    return balance(node);
 }
 
-
-void AVLTreePolynom::traverseAndInsert(Node* node, AVLTreePolynom& target, double sign) const {
+void AVLTreePolynom::inOrderTraversal(AVLNode* node, std::vector<Term>& terms) const {
     if (!node) return;
-    traverseAndInsert(node->left, target, sign);
-    Monomial m = node->monom;
-    m.coefficient *= sign;
-    target.insert(m);
-    traverseAndInsert(node->right, target, sign);
+    inOrderTraversal(node->left, terms);
+    terms.push_back(node->term);
+    inOrderTraversal(node->right, terms);
+}
+
+void AVLTreePolynom::clear(AVLNode* node) {
+    if (!node) return;
+    clear(node->left);
+    clear(node->right);
+    delete node;
+}
+
+AVLTreePolynom::AVLNode* AVLTreePolynom::copyTree(AVLNode* node) const {
+    if (!node) return nullptr;
+    AVLNode* newNode = new AVLNode(node->term);
+    newNode->left = copyTree(node->left);
+    newNode->right = copyTree(node->right);
+    newNode->height = node->height;
+    return newNode;
+}
+
+void AVLTreePolynom::addTerm(double coefficient, const std::map<char, int>& variables) {
+    if (coefficient == 0) return;
+    Term term(coefficient, variables);
+    root = insert(root, term);
 }
 
 AVLTreePolynom AVLTreePolynom::operator+(const AVLTreePolynom& other) const {
-    AVLTreePolynom result;
-    traverseAndInsert(this->root, result, 1);
-    traverseAndInsert(other.root, result, 1);
+    AVLTreePolynom result = *this;
+    std::vector<Term> otherTerms;
+    other.inOrderTraversal(other.root, otherTerms);
+    for (const auto& term : otherTerms)
+        result.addTerm(term.coefficient, term.variables);
     return result;
 }
 
 AVLTreePolynom AVLTreePolynom::operator-(const AVLTreePolynom& other) const {
-    AVLTreePolynom result;
-    traverseAndInsert(this->root, result, 1);
-    traverseAndInsert(other.root, result, -1);
+    AVLTreePolynom result = *this;
+    std::vector<Term> otherTerms;
+    other.inOrderTraversal(other.root, otherTerms);
+    for (const auto& term : otherTerms)
+        result.addTerm(-term.coefficient, term.variables);
     return result;
-}
-
-void AVLTreePolynom::multiplyWith(Node* a, const AVLTreePolynom& other, AVLTreePolynom& result) const {
-    if (!a) return;
-    multiplyWith(a->left, other, result);
-    multiplyByMonomial(other.root, a->monom, result);
-    multiplyWith(a->right, other, result);
-}
-
-void AVLTreePolynom::multiplyByMonomial(Node* b, const Monomial& m, AVLTreePolynom& result) const {
-    if (!b) return;
-    multiplyByMonomial(b->left, m, result);
-
-    Monomial newMonom;
-    newMonom.coefficient = b->monom.coefficient * m.coefficient;
-    newMonom.variables = b->monom.variables;
-
-    for (const auto& [var, exp] : m.variables) {
-        newMonom.variables[var] += exp;
-    }
-
-    result.insert(newMonom);
-    multiplyByMonomial(b->right, m, result);
 }
 
 AVLTreePolynom AVLTreePolynom::operator*(const AVLTreePolynom& other) const {
     AVLTreePolynom result;
-    multiplyWith(this->root, other, result);
+    std::vector<Term> thisTerms, otherTerms;
+    this->inOrderTraversal(root, thisTerms);
+    other.inOrderTraversal(other.root, otherTerms);
+    for (const auto& a : thisTerms) {
+        for (const auto& b : otherTerms) {
+            std::map<char, int> newVars = a.variables;
+            for (const auto& [var, exp] : b.variables)
+                newVars[var] += exp;
+            result.addTerm(a.coefficient * b.coefficient, newVars);
+        }
+    }
     return result;
+}
+
+void AVLTreePolynom::print() const {
+    std::vector<Term> terms;
+    inOrderTraversal(root, terms);
+    bool isFirstTerm = true;
+    bool hasTerms = false;
+    for (const auto& term : terms) {
+        if (term.coefficient == 0) continue;
+        hasTerms = true;
+        if (!isFirstTerm) {
+            std::cout << (term.coefficient >= 0 ? " + " : " - ");
+        }
+        else {
+            if (term.coefficient < 0) std::cout << "-";
+        }
+        double absCoeff = std::abs(term.coefficient);
+        if (absCoeff != 1.0 || term.variables.empty())
+            std::cout << absCoeff;
+        for (const auto& [var, exp] : term.variables) {
+            std::cout << var;
+            if (exp != 1)
+                std::cout << "^" << exp;
+        }
+        isFirstTerm = false;
+    }
+    if (!hasTerms) std::cout << "0";
+    std::cout << std::endl;
+}
+
+void AVLTreePolynom::clear() {
+    clear(root);
+    root = nullptr;
+    size = 0;
+}
+
+size_t AVLTreePolynom::getSize() const {
+    return size;
 }

@@ -76,3 +76,7 @@ void UnorderedMapArrayPolynom::print() const {
     }
     std::cout << std::endl;
 }
+
+void UnorderedMapArrayPolynom::clear() {
+    terms.clear();
+}

@@ -1,52 +1,60 @@
 #pragma once
+
 #include <map>
+#include <vector>
 #include <iostream>
-#include <string>
-#include <sstream>
-
-struct Monomial {
-    std::map<char, int> variables;
-    double coefficient;
-
-    bool operator<(const Monomial& other) const;
-    bool operator==(const Monomial& other) const;
-    std::string toString() const;
-};
-
-struct Node {
-    Monomial monom;
-    Node* left;
-    Node* right;
-    int height;
-
-    Node(const Monomial& m);
-};
 
 class AVLTreePolynom {
-    Node* root;
+private:
+    struct Term {
+        std::map<char, int> variables;
+        double coefficient;
 
-    void destroy(Node* node);
-    int height(Node* n);
-    int getBalance(Node* n);
-    Node* rotateRight(Node* y);
-    Node* rotateLeft(Node* x);
-    Node* insert(Node* node, const Monomial& m);
-    void inorder(Node* node) const;
+        Term(double coeff, const std::map<char, int>& vars);
+        bool operator<(const Term& other) const;
+        bool operator==(const Term& other) const;
+    };
 
-    void traverseAndInsert(Node* node, AVLTreePolynom& target, double sign) const;
-    void multiplyWith(Node* a, const AVLTreePolynom& other, AVLTreePolynom& result) const;
-    void multiplyByMonomial(Node* b, const Monomial& m, AVLTreePolynom& result) const;
+    struct AVLNode {
+        Term term;
+        AVLNode* left;
+        AVLNode* right;
+        int height;
+
+        AVLNode(const Term& t);
+    };
+
+    AVLNode* root;
+    size_t size;
+
+    int height(AVLNode* node) const;
+    int balanceFactor(AVLNode* node) const;
+    void updateHeight(AVLNode* node);
+
+    AVLNode* rotateRight(AVLNode* y);
+    AVLNode* rotateLeft(AVLNode* x);
+    AVLNode* balance(AVLNode* node);
+
+    AVLNode* insert(AVLNode* node, const Term& term);
+    AVLNode* remove(AVLNode* node, const Term& term);
+    AVLNode* findMin(AVLNode* node) const;
+    void inOrderTraversal(AVLNode* node, std::vector<Term>& terms) const;
+    void clear(AVLNode* node);
+    AVLNode* copyTree(AVLNode* node) const;
 
 public:
     AVLTreePolynom();
+    AVLTreePolynom(const AVLTreePolynom& other);
+    AVLTreePolynom(AVLTreePolynom&& other) noexcept;
+    AVLTreePolynom& operator=(const AVLTreePolynom& other);
+    AVLTreePolynom& operator=(AVLTreePolynom&& other) noexcept;
     ~AVLTreePolynom();
 
-    void insert(const Monomial& m);
-    void print() const;
-    void printInOrder(Node* node, bool& isFirstTerm) const;
-
-
+    void addTerm(double coefficient, const std::map<char, int>& variables);
     AVLTreePolynom operator+(const AVLTreePolynom& other) const;
     AVLTreePolynom operator-(const AVLTreePolynom& other) const;
     AVLTreePolynom operator*(const AVLTreePolynom& other) const;
+    void print() const;
+    void clear();
+    size_t getSize() const;
 };

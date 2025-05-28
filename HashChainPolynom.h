@@ -31,4 +31,5 @@ public:
     HashChainPolynom operator*(const HashChainPolynom& other) const;
 
     void print() const;
+    void clear();
 };

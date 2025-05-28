@@ -20,4 +20,6 @@ public:
     OrderedMapPolynom operator*(const OrderedMapPolynom& other) const;
 
     void print() const;
+    void clear();
+
 };

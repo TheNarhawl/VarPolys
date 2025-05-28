@@ -75,3 +75,7 @@ void UnorderedListPolynom::print() const {
     }
     std::cout << std::endl;
 }
+
+void UnorderedListPolynom::clear() {
+    terms.clear();
+}

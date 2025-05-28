@@ -26,4 +26,5 @@ public:
     UnorderedMapArrayPolynom operator*(const UnorderedMapArrayPolynom& other) const;
 
     void print() const;
+    void clear();
 };

@@ -32,4 +32,5 @@ public:
     CollisionResolutionPolynom operator*(const CollisionResolutionPolynom& other) const;
 
     void print() const;
+    void clear();
 };

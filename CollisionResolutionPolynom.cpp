@@ -118,3 +118,10 @@ void CollisionResolutionPolynom::print() const {
     std::cout << std::endl;
 }
 
+void CollisionResolutionPolynom::clear() {
+    table.clear();
+    table.resize(capacity);
+    size = 0;
+}
+
+

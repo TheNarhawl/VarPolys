@@ -140,6 +140,9 @@
     <ClInclude Include="AVLTreePolynom.h" />
     <ClInclude Include="CollisionResolutionPolynom.h" />
     <ClInclude Include="HashChainPolynom.h" />
+    <ClInclude Include="include\httplib.h" />
+    <ClInclude Include="include\nlohmann\json.hpp" />
+    <ClInclude Include="MultiPolynomStorage.h" />
     <ClInclude Include="OrderedMapPolynom.h" />
     <ClInclude Include="UnorderedListPolynom.h" />
     <ClInclude Include="UnorderedMapArrayPolynom.h" />

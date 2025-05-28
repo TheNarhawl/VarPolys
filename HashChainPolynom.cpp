@@ -110,3 +110,9 @@ void HashChainPolynom::print() const {
     std::cout << std::endl;
 }
 
+void HashChainPolynom::clear() {
+    for (auto& chain : table) {
+        chain.clear();
+    }
+}
+

@@ -26,4 +26,5 @@ public:
     UnorderedListPolynom operator*(const UnorderedListPolynom& other) const;
 
     void print() const;
+    void clear();
 };

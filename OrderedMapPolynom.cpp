@@ -88,3 +88,6 @@ OrderedMapPolynom OrderedMapPolynom::operator*(const OrderedMapPolynom& other) c
     return result;
 }
 
+void OrderedMapPolynom::clear() {
+    terms.clear();
+}
