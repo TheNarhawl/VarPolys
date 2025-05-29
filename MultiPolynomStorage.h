@@ -19,6 +19,7 @@ public:
     UnorderedListPolynom unorderedList;
     UnorderedMapArrayPolynom unorderedMapArray;
 
+
     std::vector<std::pair<double, std::map<char, int>>> getTermsFrom(const std::string& polyType) const {
         std::vector<std::pair<double, std::map<char, int>>> result;
 

@@ -59,7 +59,7 @@
         <h3>{{ formatStorageType(storageType) }}</h3>
 
         <div class="polynomial-results-layout">
-          <div class="polynomials-column">
+          <div class="polynomials-column-vertical">
             <div class="polynomial-view">
               <h4>Полином 1:</h4>
               <div class="terms">
@@ -73,7 +73,7 @@
               </div>
             </div>
           </div>
-          <div class="operations-grid">
+          <div class="operations-row-horizontal">
             <div class="operation">
               <h4>Сумма</h4>
               <div class="terms">
@@ -179,11 +179,9 @@ const removeVariable = (polyName, termIndex, varName) => {
 };
 </script>
 
-<style>
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
-</style>
-
 <style style="scss">
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -192,196 +190,235 @@ const removeVariable = (polyName, termIndex, varName) => {
 
 body {
   font-family: "Inter", sans-serif;
-  line-height: 1.5;
-  color: #333;
   background-color: #f5f5f5;
+  color: #333;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 10px;
 }
 
 h1 {
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 20px;
-  color: #2c3e50;
-  text-align: center;
-}
-
-h2 {
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 15px;
+  text-align: center;
+  color: #2c3e50;
+}
+
+h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
   color: #2c3e50;
   border-bottom: 1px solid #eee;
-  padding-bottom: 8px;
+  padding-bottom: 5px;
 }
 
 h3 {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   color: #34495e;
 }
 
 h4 {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
   color: #7f8c8d;
 }
 
-
 .input-section,
 .results-section {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  padding: 20px;
-  margin-bottom: 20px;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 15px;
+  margin-bottom: 15px;
 }
 
 .polynomials-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
 }
 
 .polynomial {
+  flex: 1;
   border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 15px;
+  border-radius: 6px;
+  padding: 10px;
   background: #fafafa;
 }
 
 .term {
-  margin-bottom: 10px;
-  padding: 10px;
-  background: white;
-  border-radius: 6px;
+  margin-bottom: 8px;
+  padding: 8px;
+  background: #fff;
+  border-radius: 4px;
   border: 1px solid #eee;
 }
 
 .term-controls {
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 input {
   flex: 1;
-  padding: 8px;
+  padding: 6px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-family: "Inter", sans-serif;
+  font-size: 13px;
 }
 
 .variables {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
   align-items: center;
 }
 
 .variable {
   background: #e3f2fd;
-  padding: 4px 8px;
-  border-radius: 4px;
+  padding: 3px 6px;
+  border-radius: 3px;
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 14px;
+  gap: 3px;
+  font-size: 13px;
 }
 
 button {
   cursor: pointer;
-  transition: all 0.2s;
+  transition: background 0.2s, color 0.2s, transform 0.1s;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  background-color: #ecf0f1;
+  color: #2c3e50;
+}
+
+button:hover {
+  background-color: #d0d7dc;
+  transform: translateY(-1px);
 }
 
 .add-btn {
-  background: #3498db;
+  background-color: #3498db;
   color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  font-size: 13px;
-  margin-top: 5px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 6px;
+  margin-top: 6px;
 }
 
 .add-btn:hover {
-  background: #2980b9;
+  background-color: #2980b9;
 }
 
 .remove-btn {
-  background: #e74c3c;
-  color: white;
-  border: none;
-  width: 22px;
-  height: 22px;
+  background-color: #f0f0f0;
+  color: #c0392b;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
-  margin-left: 5px;
+  font-size: 16px;
+  padding: 0;
+  margin-left: 6px;
+  border: 1px solid #e0e0e0;
 }
 
 .remove-btn:hover {
-  background: #c0392b;
+  background-color: #ffecec;
+  color: #e74c3c;
 }
 
 .storage-type {
-  margin-bottom: 25px;
-  padding: 15px;
+  margin-bottom: 20px;
+  padding: 12px;
   background: #f8f9fa;
-  border-radius: 8px;
-  border-left: 4px solid #3498db;
+  border-radius: 6px;
+  border-left: 3px solid #3498db;
 }
 
-.original-polynomials {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+.polynomial-results-layout {
+  display: flex;
   gap: 15px;
-  margin-bottom: 15px;
-  padding-bottom: 15px;
-  border-bottom: 1px dashed #ddd;
+  margin-top: 10px;
+}
+
+.polynomials-column-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.operations-row-horizontal {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  flex: 2;
+}
+
+.operations-row-horizontal .operation {
+  flex: 1;
+}
+
+.polynomials-column {
+  flex: 1;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .polynomial-view {
   background: white;
-  padding: 10px;
-  border-radius: 6px;
+  padding: 8px;
+  border-radius: 4px;
   border: 1px solid #eee;
 }
 
+/*
 .operations-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 15px;
+  flex: 1;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
+*/
 
 .operation {
   background: white;
-  padding: 12px;
-  border-radius: 6px;
+  padding: 8px;
+  border-radius: 4px;
   border: 1px solid #eee;
 }
 
 .terms {
   font-family: "Roboto Mono", monospace;
-  font-size: 14px;
+  font-size: 13px;
+  line-height: 1.4;
   color: #2c3e50;
-  line-height: 1.6;
 }
 
 @media (max-width: 768px) {
   .polynomials-grid,
-  .original-polynomials {
-    grid-template-columns: 1fr;
+  .polynomial-results-layout {
+    flex-direction: column;
   }
 }
 </style>

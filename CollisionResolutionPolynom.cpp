@@ -8,9 +8,10 @@ CollisionResolutionPolynom::CollisionResolutionPolynom(size_t cap)
 size_t CollisionResolutionPolynom::hash(const std::map<char, int>& variables) const {
     size_t h = 0;
     for (const auto& [var, exp] : variables) {
+        // Комбинируем хеши переменных и степеней
         h ^= std::hash<char>()(var) ^ (std::hash<int>()(exp << 1));
     }
-    return h % capacity;
+    return h % capacity; // Получаем индекс по модулю размера таблицы
 }
 
 void CollisionResolutionPolynom::addTerm(double coefficient, const std::map<char, int>& variables) {
@@ -18,22 +19,22 @@ void CollisionResolutionPolynom::addTerm(double coefficient, const std::map<char
 
     size_t idx = hash(variables);
     size_t originalIdx = idx;
-    while (true) {
-        if (!table[idx].has_value()) {
+    while (true) { // Свободная ячейка
+        if (!table[idx].has_value()) { // Терм с такими же переменными найден
             table[idx] = Node{ variables, coefficient };
             ++size;
             return;
         }
         if (table[idx]->variables == variables) {
             table[idx]->coefficient += coefficient;
-            if (table[idx]->coefficient == 0) {
+            if (table[idx]->coefficient == 0) { // Если коэффициент стал 0 — удаляем терм
                 table[idx].reset();
                 --size;
             }
             return;
         }
         idx = (idx + 1) % capacity;
-        if (idx == originalIdx) break;
+        if (idx == originalIdx) break; // Если вернулись к исходному индексу — таблица заполнена
     }
 
     std::cerr << "full hash table" << std::endl;

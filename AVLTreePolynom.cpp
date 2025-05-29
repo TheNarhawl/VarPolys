@@ -2,11 +2,14 @@
 #include <cmath>
 #include <algorithm>
 
+// Представление терма — ключ (variables) и значение (coefficient)
 AVLTreePolynom::Term::Term(double coeff, const std::map<char, int>& vars)
     : coefficient(coeff), variables(vars) {
 }
 
+// Компаратор для ключей (термов) — для структуры дерева
 bool AVLTreePolynom::Term::operator<(const Term& other) const {
+    // Сравниваем по степеням и переменным, чтобы определить порядок
     int this_degree = 0, other_degree = 0;
     for (const auto& [var, exp] : variables) this_degree += exp;
     for (const auto& [var, exp] : other.variables) other_degree += exp;

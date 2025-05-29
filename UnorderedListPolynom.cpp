@@ -13,7 +13,7 @@ void UnorderedListPolynom::addTerm(double coefficient, const std::map<char, int>
         }
     }
     else {
-        terms.push_back({ variables, coefficient });
+        terms.push_back({ variables, coefficient }); // добавляем в конец 
     }
 }
 
