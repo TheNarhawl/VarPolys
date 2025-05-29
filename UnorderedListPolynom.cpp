@@ -1,10 +1,14 @@
+
 #include "UnorderedListPolynom.h"
+#include <unordered_map>
 
 void UnorderedListPolynom::addTerm(double coefficient, const std::map<char, int>& variables) {
     if (coefficient == 0.0) return;
 
+    std::unordered_map<char, int> unorderedVars(variables.begin(), variables.end());
+
     auto it = std::find_if(terms.begin(), terms.end(),
-        [&](const Term& term) { return term.variables == variables; });
+        [&](const Term& term) { return term.variables == unorderedVars; });
 
     if (it != terms.end()) {
         it->coefficient += coefficient;
@@ -13,21 +17,21 @@ void UnorderedListPolynom::addTerm(double coefficient, const std::map<char, int>
         }
     }
     else {
-        terms.push_back({ variables, coefficient }); // добавляем в конец 
+        terms.push_back({ unorderedVars, coefficient });
     }
 }
 
 double UnorderedListPolynom::getTerm(const std::map<char, int>& variables) const {
-    auto it = std::find_if(terms.begin(), terms.end(), [&](const Term& term) {
-        return term.variables == variables;
-        });
+    std::unordered_map<char, int> unorderedVars(variables.begin(), variables.end());
+    auto it = std::find_if(terms.begin(), terms.end(),
+        [&](const Term& term) { return term.variables == unorderedVars; });
     return (it != terms.end()) ? it->coefficient : 0.0;
 }
 
 UnorderedListPolynom UnorderedListPolynom::operator+(const UnorderedListPolynom& other) const {
     UnorderedListPolynom result = *this;
     for (const auto& term : other.terms) {
-        result.addTerm(term.coefficient, term.variables);
+        result.addTerm(term.coefficient, std::map<char, int>(term.variables.begin(), term.variables.end()));
     }
     return result;
 }
@@ -35,7 +39,7 @@ UnorderedListPolynom UnorderedListPolynom::operator+(const UnorderedListPolynom&
 UnorderedListPolynom UnorderedListPolynom::operator-(const UnorderedListPolynom& other) const {
     UnorderedListPolynom result = *this;
     for (const auto& term : other.terms) {
-        result.addTerm(-term.coefficient, term.variables);
+        result.addTerm(-term.coefficient, std::map<char, int>(term.variables.begin(), term.variables.end()));
     }
     return result;
 }
@@ -44,11 +48,12 @@ UnorderedListPolynom UnorderedListPolynom::operator*(const UnorderedListPolynom&
     UnorderedListPolynom result;
     for (const auto& term1 : this->terms) {
         for (const auto& term2 : other.terms) {
-            std::map<char, int> newVars = term1.variables;
+            std::unordered_map<char, int> newVars = term1.variables;
             for (const auto& [var, exp] : term2.variables) {
                 newVars[var] += exp;
             }
-            result.addTerm(term1.coefficient * term2.coefficient, newVars);
+            result.addTerm(term1.coefficient * term2.coefficient,
+                std::map<char, int>(newVars.begin(), newVars.end()));
         }
     }
     return result;
@@ -91,8 +96,10 @@ std::vector<std::pair<double, std::map<char, int>>> UnorderedListPolynom::getTer
     std::vector<std::pair<double, std::map<char, int>>> result;
     for (const auto& term : terms) {
         if (term.coefficient != 0) {
-            result.emplace_back(term.coefficient, term.variables);
+            std::map<char, int> orderedVars(term.variables.begin(), term.variables.end());
+            result.emplace_back(term.coefficient, orderedVars);
         }
     }
     return result;
 }
+

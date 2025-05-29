@@ -1,27 +1,19 @@
 ﻿#pragma once
 #include <vector>
 #include <map>
+#include <unordered_map>
 #include <iostream>
-#include <sstream>
-#include <algorithm>
-#include <vector>
 
 class UnorderedMapArrayPolynom {
 private:
     struct Term {
-        std::map<char, int> variables;
+        std::unordered_map<char, int> variables;
         double coefficient;
-
-        bool operator==(const Term& other) const {
-            return variables == other.variables;
-        }
     };
-
     std::vector<Term> terms;
 
 public:
     void addTerm(double coefficient, const std::map<char, int>& variables);
-
     double getTerm(const std::map<char, int>& variables) const;
     UnorderedMapArrayPolynom operator+(const UnorderedMapArrayPolynom& other) const;
     UnorderedMapArrayPolynom operator-(const UnorderedMapArrayPolynom& other) const;

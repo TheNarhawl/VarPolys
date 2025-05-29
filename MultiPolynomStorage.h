@@ -88,6 +88,7 @@ public:
         unorderedMapArray.addTerm(coefficient, variables);
     }
 
+
     MultiPolynomStorage operator+(const MultiPolynomStorage& other) const {
         MultiPolynomStorage result;
         result.avlTree = avlTree + other.avlTree;
