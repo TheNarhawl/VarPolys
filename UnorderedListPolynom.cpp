@@ -17,6 +17,13 @@ void UnorderedListPolynom::addTerm(double coefficient, const std::map<char, int>
     }
 }
 
+double UnorderedListPolynom::getTerm(const std::map<char, int>& variables) const {
+    auto it = std::find_if(terms.begin(), terms.end(), [&](const Term& term) {
+        return term.variables == variables;
+        });
+    return (it != terms.end()) ? it->coefficient : 0.0;
+}
+
 UnorderedListPolynom UnorderedListPolynom::operator+(const UnorderedListPolynom& other) const {
     UnorderedListPolynom result = *this;
     for (const auto& term : other.terms) {

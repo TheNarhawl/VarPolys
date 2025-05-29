@@ -40,6 +40,22 @@ void CollisionResolutionPolynom::addTerm(double coefficient, const std::map<char
     std::cerr << "full hash table" << std::endl;
 }
 
+std::optional<CollisionResolutionPolynom::Node> CollisionResolutionPolynom::getTerm(const std::map<char, int>& variables) const {
+    size_t idx = hash(variables);
+    size_t originalIdx = idx;
+    while (true) {
+        if (!table[idx].has_value()) {
+            return std::nullopt;
+        }
+        if (table[idx]->variables == variables) {
+            return table[idx];
+        }
+        idx = (idx + 1) % capacity;
+        if (idx == originalIdx) break;
+    }
+    return std::nullopt;
+}
+
 CollisionResolutionPolynom CollisionResolutionPolynom::operator+(const CollisionResolutionPolynom& other) const {
     CollisionResolutionPolynom result = *this;
     for (const auto& optNode : other.table) {

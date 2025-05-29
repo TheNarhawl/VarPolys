@@ -22,6 +22,7 @@ private:
 public:
     void addTerm(double coefficient, const std::map<char, int>& variables);
 
+    double getTerm(const std::map<char, int>& variables) const;
     UnorderedListPolynom operator+(const UnorderedListPolynom& other) const;
     UnorderedListPolynom operator-(const UnorderedListPolynom& other) const;
     UnorderedListPolynom operator*(const UnorderedListPolynom& other) const;

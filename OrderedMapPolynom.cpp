@@ -54,6 +54,14 @@ void OrderedMapPolynom::print() const {
     std::cout << std::endl;
 }
 
+double OrderedMapPolynom::getTerm(const VariableKey& variables) const {
+    auto it = terms.find(variables);
+    if (it != terms.end()) {
+        return it->second;
+    }
+    return 0.0;
+}
+
 OrderedMapPolynom OrderedMapPolynom::operator+(const OrderedMapPolynom& other) const {
     OrderedMapPolynom result = *this;
     for (const auto& [vars, coef] : other.terms) {

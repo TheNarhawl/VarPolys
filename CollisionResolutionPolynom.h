@@ -27,6 +27,8 @@ public:
     explicit CollisionResolutionPolynom(size_t cap = 101);
 
     void addTerm(double coefficient, const std::map<char, int>& variables);
+    std::optional<Node> getTerm(const std::map<char, int>& variables) const;
+
     CollisionResolutionPolynom operator+(const CollisionResolutionPolynom& other) const;
     CollisionResolutionPolynom operator-(const CollisionResolutionPolynom& other) const;
     CollisionResolutionPolynom operator*(const CollisionResolutionPolynom& other) const;

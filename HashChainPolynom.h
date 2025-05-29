@@ -4,6 +4,7 @@
 #include <list>
 #include <map>
 #include <string>
+#include <optional>
 
 class HashChainPolynom {
 private:
@@ -26,6 +27,8 @@ public:
     explicit HashChainPolynom(size_t cap = 101);
 
     void addTerm(double coefficient, const std::map<char, int>& variables);
+    std::optional<Node> getTerm(const std::map<char, int>& variables) const;
+
     HashChainPolynom operator+(const HashChainPolynom& other) const;
     HashChainPolynom operator-(const HashChainPolynom& other) const;
     HashChainPolynom operator*(const HashChainPolynom& other) const;

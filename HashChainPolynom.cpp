@@ -31,6 +31,16 @@ void HashChainPolynom::addTerm(double coefficient, const std::map<char, int>& va
     table[idx].push_back({ variables, coefficient });
 }
 
+std::optional<HashChainPolynom::Node> HashChainPolynom::getTerm(const std::map<char, int>& variables) const {
+    size_t idx = hash(variables);
+    for (const auto& node : table[idx]) {
+        if (isEqual(node.variables, variables)) {
+            return node;
+        }
+    }
+    return std::nullopt;
+}
+
 HashChainPolynom HashChainPolynom::operator+(const HashChainPolynom& other) const {
     HashChainPolynom result = *this;
     for (const auto& bucket : other.table) {

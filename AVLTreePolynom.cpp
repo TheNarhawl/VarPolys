@@ -200,6 +200,24 @@ void AVLTreePolynom::addTerm(double coefficient, const std::map<char, int>& vari
     root = insert(root, term);
 }
 
+const AVLTreePolynom::Term* AVLTreePolynom::findTerm(const std::map<char, int>& variables) const {
+    return findTermRecursive(root, variables);
+}
+
+
+const AVLTreePolynom::Term* AVLTreePolynom::findTermRecursive(AVLNode* node, const std::map<char, int>& variables) const {
+    if (!node) return nullptr;
+
+    Term target(0.0, variables);
+
+    if (target == node->term) return &node->term;
+    if (target < node->term)
+        return findTermRecursive(node->left, variables);
+    else
+        return findTermRecursive(node->right, variables);
+}
+
+
 AVLTreePolynom AVLTreePolynom::operator+(const AVLTreePolynom& other) const {
     AVLTreePolynom result = *this;
     std::vector<Term> otherTerms;

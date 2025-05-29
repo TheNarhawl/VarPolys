@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <optional>
 
 using VariableKey = std::map<char, int>;
 
@@ -16,6 +17,7 @@ public:
     void addTerm(double coefficient, const VariableKey& variables);
     std::string toString() const;
 
+    double getTerm(const VariableKey& variables) const;
     OrderedMapPolynom operator+(const OrderedMapPolynom& other) const;
     OrderedMapPolynom operator-(const OrderedMapPolynom& other) const;
     OrderedMapPolynom operator*(const OrderedMapPolynom& other) const;

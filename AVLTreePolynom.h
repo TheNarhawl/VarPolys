@@ -34,6 +34,7 @@ private:
     AVLNode* rotateRight(AVLNode* y);
     AVLNode* rotateLeft(AVLNode* x);
     AVLNode* balance(AVLNode* node);
+    const Term* findTermRecursive(AVLNode* node, const std::map<char, int>& variables) const;
 
     AVLNode* insert(AVLNode* node, const Term& term);
     AVLNode* remove(AVLNode* node, const Term& term);
@@ -51,6 +52,7 @@ public:
     ~AVLTreePolynom();
 
     void addTerm(double coefficient, const std::map<char, int>& variables);
+    const Term* findTerm(const std::map<char, int>& variables) const;
     AVLTreePolynom operator+(const AVLTreePolynom& other) const;
     AVLTreePolynom operator-(const AVLTreePolynom& other) const;
     AVLTreePolynom operator*(const AVLTreePolynom& other) const;
